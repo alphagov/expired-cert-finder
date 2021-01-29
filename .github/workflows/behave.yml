@@ -1,0 +1,24 @@
+name: CI
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+      
+      - name: Setup Python
+        uses: actions/setup-python@v2.2.1
+
+      - name: Run a multi-line script
+        run: |
+          sudo apt-get -y install faketime
+          pip install -r requirements.txt
+          pip install -r requirements_dev.txt
+          behave

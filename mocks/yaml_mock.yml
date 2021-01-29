@@ -1,0 +1,7 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: something
+  namespace: a names space
+data:
+  tls.crt: |
