@@ -21,6 +21,7 @@ def run_cert_checker(context):
 
     assert cert_check_process.returncode == 0
 
+
 @then(u'no expired certificates should be found')
 def check_no_certs_found(context):
     if len(context.output) is not 0:
@@ -28,15 +29,16 @@ def check_no_certs_found(context):
 
     assert len(context.output) is 0
 
+
 @then(u'"{no_certs}" expired certificates should be found')
 def x_expired_certs_found(context, no_certs):
-    assert len(context.output) == int(no_certs)
-    assert "EXPIRED" in context.output[0]
+    assert (sum("EXPIRED" in s for s in context.output) == int(no_certs))
+
 
 @then(u'"{no_certs}" expiring certificates should be found')
 def x_expiring_certs_found(context, no_certs):
-    assert len(context.output) == int(no_certs)
-    assert "CLOSE_TO_EXPIRY" in context.output[0]
+    assert (sum("CLOSE_TO_EXPIRY" in s for s in context.output) == int(no_certs))
+
 
 @when(u'files exist in directory')
 def files_exist(context):

@@ -7,8 +7,7 @@ def save_file(problematic_certs):
 
     with open(expired_cert_list_filename, "w") as f:
         for expired in problematic_certs:
-            f.write(expired + '\n')
+            f.write(expired['message'] + '\n')
 
     if settings.ui:
         print("List of expired certificates written to %s" % expired_cert_list_filename)
-    
