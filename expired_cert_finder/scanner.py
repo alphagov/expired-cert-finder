@@ -41,7 +41,8 @@ def scan_file_for_certificate(path, expired_only, debug):
                 if cert_info is not None and (cert_info['is_expired']
                 or (cert_info['close_to_expiry'] and expired_only == False)):
                     status = "EXPIRED" if cert_info['is_expired'] else "CLOSE_TO_EXPIRY"
-                    results.append('%s, %s, %s: %s' % (cert.path, cert_info['subject'], status, cert_info['not_after']))
+                    cert_info['message'] = '%s, %s, %s: %s' % (cert.path, cert_info['subject'], status, cert_info['not_after'])
+                    results.append(cert_info)
             except Exception as e:
                 print(cert, e)
                 raise

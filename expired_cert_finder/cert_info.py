@@ -1,3 +1,4 @@
+from datetime import datetime
 from time import strftime, strptime, mktime, time
 from re import sub
 
@@ -15,7 +16,8 @@ def get_cert_information(certificate, raw=False):
         parsed = load_certificate(cert_type, certificate)
 
         timestamp = strptime(parsed.get_notAfter().decode("utf-8"), '%Y%m%d%H%M%SZ')
-        diff = mktime(timestamp) - time()
+        expiry_time = mktime(timestamp)
+        diff = expiry_time - time()
 
         not_after = strftime('%Y-%m-%d', timestamp)
 
@@ -24,10 +26,11 @@ def get_cert_information(certificate, raw=False):
         close_to_expiry = diff < expiry_window and diff > 0
 
         return {
+            'expiry_datetime': datetime.fromtimestamp(expiry_time),
             'not_after': not_after,
             'is_expired': diff < 0,
             'close_to_expiry': close_to_expiry,
-            'subject': parsed.get_subject().CN
+            'subject': parsed.get_subject().CN,
         }
     except Crypto_Error as ex_ce:
         if ex_ce.args[0][0][2] == 'no start line':
@@ -47,7 +50,7 @@ def get_cert_information(certificate, raw=False):
 class CertInfo:
     def __init__(self, discovered_by, path, certificate):
         self.discovered_by = discovered_by
-        self.path = path 
+        self.path = path
         self.certificate = certificate
 
     def getInfo(self):

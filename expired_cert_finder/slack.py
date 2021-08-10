@@ -21,12 +21,29 @@ BLOCKS =  [
 
 CERTIFICATE_PAYLOAD_SECTION = Template("* $certificate_name\n")
 
-def get_list_of_problematic_certs(problematic_certs):
+def get_list_of_problematic_certs(expired, immediate_action, next_7_days, remaining):
 
     constructed_list = ""
 
-    for problem_cert in problematic_certs:
-        constructed_list += CERTIFICATE_PAYLOAD_SECTION.substitute(certificate_name=problem_cert)
+    if len(expired) > 0:
+        constructed_list += ":alert: The following certs have EXPIRED :alert:"
+        for problem_cert in expired:
+            constructed_list += CERTIFICATE_PAYLOAD_SECTION.substitute(certificate_name=problem_cert['message'])
+
+    if len(immediate_action) > 0:
+        constructed_list += ":alert: The following certs require IMMEDIATE ACTION :alert:"
+        for problem_cert in immediate_action:
+            constructed_list += CERTIFICATE_PAYLOAD_SECTION.substitute(certificate_name=problem_cert['message'])
+
+    if len(next_7_days) > 0:
+        constructed_list += ":warning: The following certs expire in the next 7 days :warning: "
+        for problem_cert in next_7_days:
+            constructed_list += CERTIFICATE_PAYLOAD_SECTION.substitute(certificate_name=problem_cert['message'])
+
+    if len(remaining) > 0:
+        constructed_list += ":information_source: The following certs expire in more than 7 days :information_source:"
+        for problem_cert in remaining:
+            constructed_list += CERTIFICATE_PAYLOAD_SECTION.substitute(certificate_name=problem_cert['message'])
 
     return \
     {
@@ -38,12 +55,12 @@ def get_list_of_problematic_certs(problematic_certs):
     }
 
 
-def send_to_slack(problematic_certs):
+def send_to_slack(expired, immediate_action, next_7_days, remaining):
     settings = Settings.instance()
 
     client = WebhookClient(settings.slack_webhook_url)
 
-    formatted_certs_block = get_list_of_problematic_certs(problematic_certs)
+    formatted_certs_block = get_list_of_problematic_certs(expired, immediate_action, next_7_days, remaining)
 
     blocks = BLOCKS
     blocks.append(formatted_certs_block)

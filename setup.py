@@ -17,7 +17,7 @@ with open("README.md", "r") as fh:
 
 setup(
     name="expired-cert-finder",
-    version="1.0.0",
+    version="1.0.1",
     author="Government Digital Service",
     description="A tool for discovering expiring or expired certificates in a directory",
     long_description=long_description,
