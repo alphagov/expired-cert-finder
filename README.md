@@ -1,4 +1,9 @@
 # Expired Cert Finder
+
+>**GOV.UK Verify has closed**
+>
+>This repository is out of date and has been archived
+
 This is a tool to help find expiring or expired certificates within a directory. 
 Optionally it can send certificate information to Slack or to be saved to a file.
 
